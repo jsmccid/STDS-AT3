@@ -10,7 +10,7 @@ csl: harvard-uts.csl
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(fig.path='Figs/', class.output = "chunk-output",
+knitr::opts_chunk$set(fig.path='Figs/', class.output = "r",
                       echo=TRUE, warning=FALSE, message=FALSE)
 ```
 

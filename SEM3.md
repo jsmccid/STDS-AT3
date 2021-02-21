@@ -153,7 +153,7 @@ covid[covid$week == 54, "week"] <- 1
 names(covid)
 ```
 
-``` chunk-output
+``` r
 ##  [1] "iso_code"                        "continent"                      
 ##  [3] "location"                        "date"                           
 ##  [5] "total_cases"                     "new_cases"                      
@@ -320,7 +320,7 @@ ggplot(cvd_vars, aes(x = total_cases_per_million, y = total_deaths_per_million))
 summary(cvd_vars$total_cases_per_million)
 ```
 
-``` chunk-output
+``` r
 ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
 ##     2.96   253.40   801.82  2231.46  2663.43 32770.23
 ```
@@ -329,7 +329,7 @@ summary(cvd_vars$total_cases_per_million)
 summary(cvd_vars$total_deaths_per_million)
 ```
 
-``` chunk-output
+``` r
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   0.110   4.532  19.992  81.468  61.325 839.717
 ```
@@ -381,7 +381,7 @@ plot_grid(plotlist = dist_plots)
 summary(cvd_vars)
 ```
 
-``` chunk-output
+``` r
 ##    location         total_cases_per_million total_deaths_per_million
 ##  Length:80          Min.   :  202.3         Min.   :  3.377         
 ##  Class :character   1st Qu.:  573.1         1st Qu.: 14.877         
@@ -667,7 +667,7 @@ cfa1_sem <- cfa(cfa1_model, data = cfa1_df, estimator = "MLR")
 summary(cfa1_sem, fit.measures=TRUE, standardized=TRUE)
 ```
 
-``` chunk-output
+``` r
 ## lavaan 0.6-6 ended normally after 85 iterations
 ## 
 ##   Estimator                                         ML
@@ -910,7 +910,7 @@ cfa4_sem <- cfa(cfa4_model, data = cfa4_df, estimator = "MLR")
 summary(cfa4_sem, fit.measures=TRUE, standardized=TRUE)
 ```
 
-``` chunk-output
+``` r
 ## lavaan 0.6-6 ended normally after 95 iterations
 ## 
 ##   Estimator                                         ML
@@ -1103,7 +1103,7 @@ cfa_tv_sem <- sem(cfa_tv_model, data = cfa_tv, estimator = "MLR")
 summary(cfa_tv_sem, fit.measures=TRUE, standardized=TRUE)
 ```
 
-``` chunk-output
+``` r
 ## lavaan 0.6-6 ended normally after 88 iterations
 ## 
 ##   Estimator                                         ML
@@ -1284,7 +1284,7 @@ cfa_tv_sem <- sem(cfa_tv_model, data = cfa_tv, estimator = "MLR")
 summary(cfa_tv_sem, fit.measures=TRUE, standardized=TRUE)
 ```
 
-``` chunk-output
+``` r
 ## lavaan 0.6-6 ended normally after 90 iterations
 ## 
 ##   Estimator                                         ML
@@ -1426,7 +1426,7 @@ cases 0 is unlikely to be represented of the true causal path.
 reliability(cfa_tv_sem)
 ```
 
-``` chunk-output
+``` r
 ##     alpha     omega    omega2    omega3    avevar 
 ## 0.9748320 0.9367829 0.9367829 0.9374871 0.8947247
 ```
@@ -1437,7 +1437,7 @@ All reliability scores are above the threshold.
 resid(cfa_tv_sem, "cor")
 ```
 
-``` chunk-output
+``` r
 ## $type
 ## [1] "cor.bollen"
 ## 
