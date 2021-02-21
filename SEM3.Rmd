@@ -3,16 +3,15 @@ title: "Understanding Implied Structure in Past COVID-19 Research using SEM and 
 author: "Joshua McCarthy"
 date: "01/07/2020"
 output: 
-  html_document:
-    toc: true
-    toc_float: true
-    toc_depth: 2
+  md_document:
+    variant: markdown_strict+backtick_code_blocks
 bibliography: ref.bib
 csl: harvard-uts.csl
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width=6, fig.height=3, fig.path='Figs/', fig.align = "center",
+                      echo=TRUE, warning=FALSE, message=FALSE)
 ```
 
 ```{r libraries, warning=FALSE, error=FALSE, message=FALSE}
@@ -499,6 +498,8 @@ Attempts were made to substitute in additional static statistics such as governm
 ## Time Varying Model
 The previous model while still not showing a good fit overall does indicate that there is an improvement in fit when including mitigation factors. The previous DAG is quite unrealistic however as the relationship between these variables is time varying, as cases initially drove stringency, and then stringency effects subsequent case numbers. Developing a time-varying model induces significant bias that is difficult to overcome, requiring g-methods [@hernanCausalInferenceWhat], but may improve understanding of the structure.
 
+![DAG](./dags/tvdag.png)
+
 Here the DAG illustrates why time varying models are so challenging to manage systematic bias within. Additionally, as outlined by Hernan, there is often time-varying measurement error in such a model increasing complexity, this has not been included here [@hernanCausalInferenceWhat]. The above DAG illustrates the relationship between an initial state 0, and a subsequent state 1, this can be repeated n times. Below this state 0 is the state we have been utilising previously, and state 1 is an additional 4 weeks after state 0.
 
 ```{r}
@@ -549,6 +550,8 @@ Somewhat surprisingly, there were no errors in processing the model. Unfortunate
 semPaths(cfa_tv_sem,  what = "stand", rotation = 2, layout = "tree")
 ```
 As there were errors in processing the model it may be interesting if we assume there was no inititial mitigation, as there would have been at the start of the pandemic and modify the structure as such.
+
+![DAG](./dags/tvdag2.png)
 
 ```{r}
 cfa_tv_model <-'
