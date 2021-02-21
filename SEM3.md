@@ -153,33 +153,35 @@ covid[covid$week == 54, "week"] <- 1
 names(covid)
 ```
 
-    ##  [1] "iso_code"                        "continent"                      
-    ##  [3] "location"                        "date"                           
-    ##  [5] "total_cases"                     "new_cases"                      
-    ##  [7] "total_deaths"                    "new_deaths"                     
-    ##  [9] "total_cases_per_million"         "new_cases_per_million"          
-    ## [11] "total_deaths_per_million"        "new_deaths_per_million"         
-    ## [13] "total_tests"                     "new_tests"                      
-    ## [15] "total_tests_per_thousand"        "new_tests_per_thousand"         
-    ## [17] "new_tests_smoothed"              "new_tests_smoothed_per_thousand"
-    ## [19] "tests_units"                     "stringency_index"               
-    ## [21] "population"                      "population_density"             
-    ## [23] "median_age"                      "aged_65_older"                  
-    ## [25] "aged_70_older"                   "gdp_per_capita"                 
-    ## [27] "extreme_poverty"                 "cvd_death_rate"                 
-    ## [29] "diabetes_prevalence"             "female_smokers"                 
-    ## [31] "male_smokers"                    "handwashing_facilities"         
-    ## [33] "hospital_beds_per_thousand"      "life_expectancy"                
-    ## [35] "month"                           "week"
+``` chunk-output
+##  [1] "iso_code"                        "continent"                      
+##  [3] "location"                        "date"                           
+##  [5] "total_cases"                     "new_cases"                      
+##  [7] "total_deaths"                    "new_deaths"                     
+##  [9] "total_cases_per_million"         "new_cases_per_million"          
+## [11] "total_deaths_per_million"        "new_deaths_per_million"         
+## [13] "total_tests"                     "new_tests"                      
+## [15] "total_tests_per_thousand"        "new_tests_per_thousand"         
+## [17] "new_tests_smoothed"              "new_tests_smoothed_per_thousand"
+## [19] "tests_units"                     "stringency_index"               
+## [21] "population"                      "population_density"             
+## [23] "median_age"                      "aged_65_older"                  
+## [25] "aged_70_older"                   "gdp_per_capita"                 
+## [27] "extreme_poverty"                 "cvd_death_rate"                 
+## [29] "diabetes_prevalence"             "female_smokers"                 
+## [31] "male_smokers"                    "handwashing_facilities"         
+## [33] "hospital_beds_per_thousand"      "life_expectancy"                
+## [35] "month"                           "week"
+```
 
 ``` r
 #visualise missing data
 vis_dat(covid, warn_large_data = FALSE)
 ```
 
-<img src="Figs/owid_lubridate_vis-1.png" style="display: block; margin: auto;" />
-Visualising the OWID data shows that records of testing numbers are
-quite sparse, and unlikely to be useful in the analysis.
+![](Figs/owid_lubridate_vis-1.png) Visualising the OWID data shows that
+records of testing numbers are quite sparse, and unlikely to be useful
+in the analysis.
 
 To reduce the noise in the variables the OWID dataset is summarised by
 week.
@@ -306,27 +308,31 @@ dist_plots <- lapply(names(cvd_vars), function(var_x){
 plot_grid(plotlist = dist_plots)
 ```
 
-<img src="Figs/check_distribs1-1.png" style="display: block; margin: auto;" />
+![](Figs/check_distribs1-1.png)
 
 ``` r
 ggplot(cvd_vars, aes(x = total_cases_per_million, y = total_deaths_per_million)) + geom_point() + geom_label(aes(label = location))
 ```
 
-<img src="Figs/check_distribs1-2.png" style="display: block; margin: auto;" />
+![](Figs/check_distribs1-2.png)
 
 ``` r
 summary(cvd_vars$total_cases_per_million)
 ```
 
-    ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-    ##     2.96   253.40   801.82  2231.46  2663.43 32770.23
+``` chunk-output
+##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+##     2.96   253.40   801.82  2231.46  2663.43 32770.23
+```
 
 ``` r
 summary(cvd_vars$total_deaths_per_million)
 ```
 
-    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##   0.110   4.532  19.992  81.468  61.325 839.717
+``` chunk-output
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   0.110   4.532  19.992  81.468  61.325 839.717
+```
 
 There is variation in distributions so a robust method must be selected.
 “MLR” is a recommended starting point if data quality is questionable.
@@ -346,7 +352,7 @@ cvd_vars <- cvd_vars %>%
 ggplot(cvd_vars, aes(x = population, y = population_density)) + geom_point() + geom_label(aes(label = location), vjust = -2)
 ```
 
-<img src="Figs/check_distribs2-1.png" style="display: block; margin: auto;" />
+![](Figs/check_distribs2-1.png)
 
 ``` r
 cvd_vars <- cvd_vars %>% 
@@ -369,47 +375,49 @@ dist_plots <- lapply(names(cvd_vars), function(var_x){
 plot_grid(plotlist = dist_plots)
 ```
 
-<img src="Figs/check_distribs2-2.png" style="display: block; margin: auto;" />
+![](Figs/check_distribs2-2.png)
 
 ``` r
 summary(cvd_vars)
 ```
 
-    ##    location         total_cases_per_million total_deaths_per_million
-    ##  Length:80          Min.   :  202.3         Min.   :  3.377         
-    ##  Class :character   1st Qu.:  573.1         1st Qu.: 14.877         
-    ##  Mode  :character   Median : 1332.8         Median : 39.287         
-    ##                     Mean   : 2510.3         Mean   :101.883         
-    ##                     3rd Qu.: 2977.9         3rd Qu.:104.947         
-    ##                     Max.   :15106.5         Max.   :641.517         
-    ##    population        population_density aged_65_older    aged_70_older   
-    ##  Min.   :   875899   Min.   :   3.202   Min.   : 1.144   Min.   : 0.526  
-    ##  1st Qu.:  5342587   1st Qu.:  32.053   1st Qu.: 5.875   1st Qu.: 3.491  
-    ##  Median : 10566019   Median :  83.142   Median :11.143   Median : 7.157  
-    ##  Mean   : 35961743   Mean   : 160.602   Mean   :11.746   Mean   : 7.662  
-    ##  3rd Qu.: 43763080   3rd Qu.: 136.684   3rd Qu.:18.456   3rd Qu.:11.738  
-    ##  Max.   :331002647   Max.   :1935.907   Max.   :23.021   Max.   :16.240  
-    ##    median_age    cvd_death_rate   diabetes_prevalence stringency_index
-    ##  Min.   :18.80   Min.   : 85.75   Min.   : 3.280      Min.   : 16.67  
-    ##  1st Qu.:29.25   1st Qu.:133.55   1st Qu.: 5.798      1st Qu.: 76.85  
-    ##  Median :35.50   Median :205.42   Median : 7.125      Median : 85.65  
-    ##  Mean   :35.18   Mean   :237.52   Mean   : 8.212      Mean   : 83.95  
-    ##  3rd Qu.:42.35   3rd Qu.:299.73   3rd Qu.: 9.328      3rd Qu.: 93.52  
-    ##  Max.   :47.90   Max.   :559.81   Max.   :22.020      Max.   :100.00  
-    ##  government_eff     trust_in_pol   gdp_per_capita  hospital_beds_per_thousand
-    ##  Min.   :-1.9091   Min.   :1.324   Min.   : 1653   Min.   : 0.600            
-    ##  1st Qu.:-0.3416   1st Qu.:2.134   1st Qu.:11431   1st Qu.: 1.675            
-    ##  Median : 0.2977   Median :2.914   Median :23040   Median : 2.850            
-    ##  Mean   : 0.3915   Mean   :3.180   Mean   :25226   Mean   : 3.489            
-    ##  3rd Qu.: 1.1400   3rd Qu.:4.253   3rd Qu.:35975   3rd Qu.: 4.725            
-    ##  Max.   : 2.0396   Max.   :6.306   Max.   :67335   Max.   :12.270            
-    ##  basic_welfare    health_equality 
-    ##  Min.   :0.3857   Min.   :0.0000  
-    ##  1st Qu.:0.6403   1st Qu.:0.4605  
-    ##  Median :0.7425   Median :0.6579  
-    ##  Mean   :0.7288   Mean   :0.6000  
-    ##  3rd Qu.:0.8661   3rd Qu.:0.8026  
-    ##  Max.   :0.9464   Max.   :0.9474
+``` chunk-output
+##    location         total_cases_per_million total_deaths_per_million
+##  Length:80          Min.   :  202.3         Min.   :  3.377         
+##  Class :character   1st Qu.:  573.1         1st Qu.: 14.877         
+##  Mode  :character   Median : 1332.8         Median : 39.287         
+##                     Mean   : 2510.3         Mean   :101.883         
+##                     3rd Qu.: 2977.9         3rd Qu.:104.947         
+##                     Max.   :15106.5         Max.   :641.517         
+##    population        population_density aged_65_older    aged_70_older   
+##  Min.   :   875899   Min.   :   3.202   Min.   : 1.144   Min.   : 0.526  
+##  1st Qu.:  5342587   1st Qu.:  32.053   1st Qu.: 5.875   1st Qu.: 3.491  
+##  Median : 10566019   Median :  83.142   Median :11.143   Median : 7.157  
+##  Mean   : 35961743   Mean   : 160.602   Mean   :11.746   Mean   : 7.662  
+##  3rd Qu.: 43763080   3rd Qu.: 136.684   3rd Qu.:18.456   3rd Qu.:11.738  
+##  Max.   :331002647   Max.   :1935.907   Max.   :23.021   Max.   :16.240  
+##    median_age    cvd_death_rate   diabetes_prevalence stringency_index
+##  Min.   :18.80   Min.   : 85.75   Min.   : 3.280      Min.   : 16.67  
+##  1st Qu.:29.25   1st Qu.:133.55   1st Qu.: 5.798      1st Qu.: 76.85  
+##  Median :35.50   Median :205.42   Median : 7.125      Median : 85.65  
+##  Mean   :35.18   Mean   :237.52   Mean   : 8.212      Mean   : 83.95  
+##  3rd Qu.:42.35   3rd Qu.:299.73   3rd Qu.: 9.328      3rd Qu.: 93.52  
+##  Max.   :47.90   Max.   :559.81   Max.   :22.020      Max.   :100.00  
+##  government_eff     trust_in_pol   gdp_per_capita  hospital_beds_per_thousand
+##  Min.   :-1.9091   Min.   :1.324   Min.   : 1653   Min.   : 0.600            
+##  1st Qu.:-0.3416   1st Qu.:2.134   1st Qu.:11431   1st Qu.: 1.675            
+##  Median : 0.2977   Median :2.914   Median :23040   Median : 2.850            
+##  Mean   : 0.3915   Mean   :3.180   Mean   :25226   Mean   : 3.489            
+##  3rd Qu.: 1.1400   3rd Qu.:4.253   3rd Qu.:35975   3rd Qu.: 4.725            
+##  Max.   : 2.0396   Max.   :6.306   Max.   :67335   Max.   :12.270            
+##  basic_welfare    health_equality 
+##  Min.   :0.3857   Min.   :0.0000  
+##  1st Qu.:0.6403   1st Qu.:0.4605  
+##  Median :0.7425   Median :0.6579  
+##  Mean   :0.7288   Mean   :0.6000  
+##  3rd Qu.:0.8661   3rd Qu.:0.8026  
+##  Max.   :0.9464   Max.   :0.9474
+```
 
 Despite removing some outliers and a portion of the lowest values the
 distributions are still quite skewed for some statistics, the robust
@@ -508,13 +516,13 @@ a <- dagify(cases ~ age,
 ggdag(a) + theme_dag()
 ```
 
-<img src="Figs/acd_dag-1.png" style="display: block; margin: auto;" />
-The above DAG shows age as a parent of both cases and death, and cases
-as a parent of death, age is an exogenous variable, while cases and
-death are endogenous. While extremely simple, age is still a confounder
-in this DAG as a common cause of cases and death in any efforts to
-investigate the effects of cases on death. Deaths is the outcome
-variable, cases the contributing variable and age an exposure.
+![](Figs/acd_dag-1.png) The above DAG shows age as a parent of both
+cases and death, and cases as a parent of death, age is an exogenous
+variable, while cases and death are endogenous. While extremely simple,
+age is still a confounder in this DAG as a common cause of cases and
+death in any efforts to investigate the effects of cases on death.
+Deaths is the outcome variable, cases the contributing variable and age
+an exposure.
 
 New Outcome Variable
 --------------------
@@ -556,10 +564,9 @@ covid_new_m <- merge(covid_new, join, by = c("iso_code", "week_end"))
 ggplot(covid_new_m, aes(x = week, y = total_cases, color = location)) + geom_line()+ theme(legend.position = "none") + ylim(0, 2500)
 ```
 
-<img src="Figs/cases_vis-1.png" style="display: block; margin: auto;" />
-This visualisation, though messy aided in the selection of an
-appropriate lower total case limit, looking for an figure that was near
-the beginnings of initial slop increases.
+![](Figs/cases_vis-1.png) This visualisation, though messy aided in the
+selection of an appropriate lower total case limit, looking for an
+figure that was near the beginnings of initial slop increases.
 
 ``` r
 cvd_100c <- covid_new_m %>% 
@@ -572,9 +579,8 @@ cvd_100c <- covid_new_m %>%
 ggplot(cvd_100c, aes(x = weekoneplus, y = new_cases_per_million, color = location)) + geom_line()+ theme(legend.position = "none")+ ylim(0, 2000)
 ```
 
-<img src="Figs/case_select-1.png" style="display: block; margin: auto;" />
-Again, not a clear visualisation but helpful in selecting a
-new\_case\_per\_million value to reduce noise.
+![](Figs/case_select-1.png) Again, not a clear visualisation but helpful
+in selecting a new\_case\_per\_million value to reduce noise.
 
 Log transformation of the variables induced unidentified values where
 they were zero which had to be rectified.
@@ -592,15 +598,15 @@ cvd_100c_p4[cvd_100c_p4$logncpm < -1000, "logncpm"] <- 0
 ggplot(cvd_100c_p4, aes(x = median_age, y = logndpm)) + geom_point()
 ```
 
-<img src="Figs/unnamed-chunk-1-1.png" style="display: block; margin: auto;" />
+![](Figs/unnamed-chunk-1-1.png)
 
 ``` r
 ggplot(cvd_100c_p4, aes(x = median_age, y = logncpm)) + geom_point()
 ```
 
-<img src="Figs/unnamed-chunk-1-2.png" style="display: block; margin: auto;" />
-These visualisations show how log transformation improves the clarity of
-the signal in both new cases and new deaths.
+![](Figs/unnamed-chunk-1-2.png) These visualisations show how log
+transformation improves the clarity of the signal in both new cases and
+new deaths.
 
 ``` r
 dist_plots <- lapply(list("logncpm", "logndpm", "aged_65_older", "aged_70_older", "median_age"), function(var_x){
@@ -620,10 +626,10 @@ dist_plots <- lapply(list("logncpm", "logndpm", "aged_65_older", "aged_70_older"
 plot_grid(plotlist = dist_plots)
 ```
 
-<img src="Figs/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
-The distributions of our new variables are again visualised before
-deploying the SEM model, while they are less skewed than other variables
-utilised earlier, a robust estimator must still be utilised.
+![](Figs/unnamed-chunk-2-1.png) The distributions of our new variables
+are again visualised before deploying the SEM model, while they are less
+skewed than other variables utilised earlier, a robust estimator must
+still be utilised.
 
 CFA Model
 ---------
@@ -661,106 +667,108 @@ cfa1_sem <- cfa(cfa1_model, data = cfa1_df, estimator = "MLR")
 summary(cfa1_sem, fit.measures=TRUE, standardized=TRUE)
 ```
 
-    ## lavaan 0.6-6 ended normally after 85 iterations
-    ## 
-    ##   Estimator                                         ML
-    ##   Optimization method                           NLMINB
-    ##   Number of free parameters                         12
-    ##                                                       
-    ##                                                   Used       Total
-    ##   Number of observations                           158         171
-    ##                                                                   
-    ## Model Test User Model:
-    ##                                                Standard      Robust
-    ##   Test Statistic                                 11.759       9.965
-    ##   Degrees of freedom                                  3           3
-    ##   P-value (Chi-square)                            0.008       0.019
-    ##   Scaling correction factor                                   1.180
-    ##        Yuan-Bentler correction (Mplus variant)                     
-    ## 
-    ## Model Test Baseline Model:
-    ## 
-    ##   Test statistic                              1183.269     800.856
-    ##   Degrees of freedom                                10          10
-    ##   P-value                                        0.000       0.000
-    ##   Scaling correction factor                                  1.478
-    ## 
-    ## User Model versus Baseline Model:
-    ## 
-    ##   Comparative Fit Index (CFI)                    0.993       0.991
-    ##   Tucker-Lewis Index (TLI)                       0.975       0.971
-    ##                                                                   
-    ##   Robust Comparative Fit Index (CFI)                         0.993
-    ##   Robust Tucker-Lewis Index (TLI)                            0.977
-    ## 
-    ## Loglikelihood and Information Criteria:
-    ## 
-    ##   Loglikelihood user model (H0)              -1174.343   -1174.343
-    ##   Scaling correction factor                                  1.221
-    ##       for the MLR correction                                      
-    ##   Loglikelihood unrestricted model (H1)      -1168.463   -1168.463
-    ##   Scaling correction factor                                  1.213
-    ##       for the MLR correction                                      
-    ##                                                                   
-    ##   Akaike (AIC)                                2372.686    2372.686
-    ##   Bayesian (BIC)                              2409.437    2409.437
-    ##   Sample-size adjusted Bayesian (BIC)         2371.451    2371.451
-    ## 
-    ## Root Mean Square Error of Approximation:
-    ## 
-    ##   RMSEA                                          0.136       0.121
-    ##   90 Percent confidence interval - lower         0.061       0.049
-    ##   90 Percent confidence interval - upper         0.222       0.201
-    ##   P-value RMSEA <= 0.05                          0.033       0.052
-    ##                                                                   
-    ##   Robust RMSEA                                               0.132
-    ##   90 Percent confidence interval - lower                     0.047
-    ##   90 Percent confidence interval - upper                     0.226
-    ## 
-    ## Standardized Root Mean Square Residual:
-    ## 
-    ##   SRMR                                           0.011       0.011
-    ## 
-    ## Parameter Estimates:
-    ## 
-    ##   Standard errors                             Sandwich
-    ##   Information bread                           Observed
-    ##   Observed information based on                Hessian
-    ## 
-    ## Latent Variables:
-    ##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
-    ##   age_risk =~                                                           
-    ##     aged_70_older     1.000                               2.250    0.929
-    ##     median_age        1.197    0.069   17.370    0.000    2.694    0.970
-    ##     aged_65_older     1.025    0.012   88.324    0.000    2.305    0.942
-    ##   cases =~                                                              
-    ##     logncpm           1.000                               2.028    1.000
-    ##   deaths =~                                                             
-    ##     logndpm           1.000                               1.712    1.000
-    ## 
-    ## Regressions:
-    ##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
-    ##   cases ~                                                               
-    ##     age_risk          0.449    0.063    7.158    0.000    0.498    0.498
-    ##   deaths ~                                                              
-    ##     age_risk          0.227    0.054    4.239    0.000    0.299    0.299
-    ##     cases             0.459    0.067    6.814    0.000    0.544    0.544
-    ## 
-    ## Covariances:
-    ##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
-    ##  .aged_70_older ~~                                                      
-    ##    .aged_65_older     0.704    0.327    2.152    0.031    0.704    0.961
-    ## 
-    ## Variances:
-    ##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
-    ##    .aged_70_older     0.800    0.325    2.460    0.014    0.800    0.136
-    ##    .median_age        0.453    0.364    1.245    0.213    0.453    0.059
-    ##    .aged_65_older     0.670    0.329    2.035    0.042    0.670    0.112
-    ##    .logncpm           0.000                               0.000    0.000
-    ##    .logndpm           0.000                               0.000    0.000
-    ##     age_risk          5.062    0.543    9.320    0.000    1.000    1.000
-    ##    .cases             3.094    0.385    8.035    0.000    0.752    0.752
-    ##    .deaths            1.326    0.140    9.485    0.000    0.452    0.452
+``` chunk-output
+## lavaan 0.6-6 ended normally after 85 iterations
+## 
+##   Estimator                                         ML
+##   Optimization method                           NLMINB
+##   Number of free parameters                         12
+##                                                       
+##                                                   Used       Total
+##   Number of observations                           158         171
+##                                                                   
+## Model Test User Model:
+##                                                Standard      Robust
+##   Test Statistic                                 11.759       9.965
+##   Degrees of freedom                                  3           3
+##   P-value (Chi-square)                            0.008       0.019
+##   Scaling correction factor                                   1.180
+##        Yuan-Bentler correction (Mplus variant)                     
+## 
+## Model Test Baseline Model:
+## 
+##   Test statistic                              1183.269     800.856
+##   Degrees of freedom                                10          10
+##   P-value                                        0.000       0.000
+##   Scaling correction factor                                  1.478
+## 
+## User Model versus Baseline Model:
+## 
+##   Comparative Fit Index (CFI)                    0.993       0.991
+##   Tucker-Lewis Index (TLI)                       0.975       0.971
+##                                                                   
+##   Robust Comparative Fit Index (CFI)                         0.993
+##   Robust Tucker-Lewis Index (TLI)                            0.977
+## 
+## Loglikelihood and Information Criteria:
+## 
+##   Loglikelihood user model (H0)              -1174.343   -1174.343
+##   Scaling correction factor                                  1.221
+##       for the MLR correction                                      
+##   Loglikelihood unrestricted model (H1)      -1168.463   -1168.463
+##   Scaling correction factor                                  1.213
+##       for the MLR correction                                      
+##                                                                   
+##   Akaike (AIC)                                2372.686    2372.686
+##   Bayesian (BIC)                              2409.437    2409.437
+##   Sample-size adjusted Bayesian (BIC)         2371.451    2371.451
+## 
+## Root Mean Square Error of Approximation:
+## 
+##   RMSEA                                          0.136       0.121
+##   90 Percent confidence interval - lower         0.061       0.049
+##   90 Percent confidence interval - upper         0.222       0.201
+##   P-value RMSEA <= 0.05                          0.033       0.052
+##                                                                   
+##   Robust RMSEA                                               0.132
+##   90 Percent confidence interval - lower                     0.047
+##   90 Percent confidence interval - upper                     0.226
+## 
+## Standardized Root Mean Square Residual:
+## 
+##   SRMR                                           0.011       0.011
+## 
+## Parameter Estimates:
+## 
+##   Standard errors                             Sandwich
+##   Information bread                           Observed
+##   Observed information based on                Hessian
+## 
+## Latent Variables:
+##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+##   age_risk =~                                                           
+##     aged_70_older     1.000                               2.250    0.929
+##     median_age        1.197    0.069   17.370    0.000    2.694    0.970
+##     aged_65_older     1.025    0.012   88.324    0.000    2.305    0.942
+##   cases =~                                                              
+##     logncpm           1.000                               2.028    1.000
+##   deaths =~                                                             
+##     logndpm           1.000                               1.712    1.000
+## 
+## Regressions:
+##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+##   cases ~                                                               
+##     age_risk          0.449    0.063    7.158    0.000    0.498    0.498
+##   deaths ~                                                              
+##     age_risk          0.227    0.054    4.239    0.000    0.299    0.299
+##     cases             0.459    0.067    6.814    0.000    0.544    0.544
+## 
+## Covariances:
+##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+##  .aged_70_older ~~                                                      
+##    .aged_65_older     0.704    0.327    2.152    0.031    0.704    0.961
+## 
+## Variances:
+##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+##    .aged_70_older     0.800    0.325    2.460    0.014    0.800    0.136
+##    .median_age        0.453    0.364    1.245    0.213    0.453    0.059
+##    .aged_65_older     0.670    0.329    2.035    0.042    0.670    0.112
+##    .logncpm           0.000                               0.000    0.000
+##    .logndpm           0.000                               0.000    0.000
+##     age_risk          5.062    0.543    9.320    0.000    1.000    1.000
+##    .cases             3.094    0.385    8.035    0.000    0.752    0.752
+##    .deaths            1.326    0.140    9.485    0.000    0.452    0.452
+```
 
 This time modelling produced no errors and the fit measures are valid.
 The output is quite long but can be addressed in sections. It should be
@@ -802,8 +810,8 @@ obvious errors within the model.
 semPaths(cfa1_sem,  what = "stand", rotation = 2, layout = "tree")
 ```
 
-<img src="Figs/cfa1_paths-1.png" style="display: block; margin: auto;" />
-Again the variance estimates can be visualised.
+![](Figs/cfa1_paths-1.png) Again the variance estimates can be
+visualised.
 
 ### Model 2 - Age, Cases, Chronic Illness, Deaths
 
@@ -819,15 +827,14 @@ a <- dagify(covid ~ age,
 ggdag(a) + theme_dag()
 ```
 
-<img src="Figs/unnamed-chunk-3-1.png" style="display: block; margin: auto;" />
-As the previous model indicated some goodness of fit, I have chosen to
-continue exploration, and incorporate further variables in order to
-asses the effect on the mode. The second iteration introduces risk due
-to chronic disease, measured by cardiovascular death rate and diabetes
-prevalence within the country. Increased age is associated with
-increased risk of cardiovascular disease, and we can test if our
-inference that this is further associated with deaths was in the correct
-direction.
+![](Figs/unnamed-chunk-3-1.png) As the previous model indicated some
+goodness of fit, I have chosen to continue exploration, and incorporate
+further variables in order to asses the effect on the mode. The second
+iteration introduces risk due to chronic disease, measured by
+cardiovascular death rate and diabetes prevalence within the country.
+Increased age is associated with increased risk of cardiovascular
+disease, and we can test if our inference that this is further
+associated with deaths was in the correct direction.
 
 ``` r
 cfa2_df <- cvd_100c_p4 %>% 
@@ -861,8 +868,8 @@ model is a failure.
 semPaths(cfa2_sem,  what = "stand", rotation = 2, layout = "tree")
 ```
 
-<img src="Figs/unnamed-chunk-5-1.png" style="display: block; margin: auto;" />
-Here we can visualise where the negative variances occur.
+![](Figs/unnamed-chunk-5-1.png) Here we can visualise where the negative
+variances occur.
 
 ### CFA Model 3
 
@@ -875,10 +882,10 @@ a <- dagify(cases ~ age,
 ggdag(a) + theme_dag()
 ```
 
-<img src="Figs/cfa3_dag-1.png" style="display: block; margin: auto;" />
-This DAG introduces the latent exogenous variable mitigations, measured
-by stringency index, this variable is associated with an effect on
-cases, as cases are likely to be effected by changes in restrictions.
+![](Figs/cfa3_dag-1.png) This DAG introduces the latent exogenous
+variable mitigations, measured by stringency index, this variable is
+associated with an effect on cases, as cases are likely to be effected
+by changes in restrictions.
 
 ``` r
 cfa4_df <- cvd_100c_p4 %>% 
@@ -903,113 +910,115 @@ cfa4_sem <- cfa(cfa4_model, data = cfa4_df, estimator = "MLR")
 summary(cfa4_sem, fit.measures=TRUE, standardized=TRUE)
 ```
 
-    ## lavaan 0.6-6 ended normally after 95 iterations
-    ## 
-    ##   Estimator                                         ML
-    ##   Optimization method                           NLMINB
-    ##   Number of free parameters                         15
-    ##                                                       
-    ##                                                   Used       Total
-    ##   Number of observations                           146         171
-    ##                                                                   
-    ## Model Test User Model:
-    ##                                                Standard      Robust
-    ##   Test Statistic                                 14.441      13.660
-    ##   Degrees of freedom                                  6           6
-    ##   P-value (Chi-square)                            0.025       0.034
-    ##   Scaling correction factor                                   1.057
-    ##        Yuan-Bentler correction (Mplus variant)                     
-    ## 
-    ## Model Test Baseline Model:
-    ## 
-    ##   Test statistic                              1117.732     859.202
-    ##   Degrees of freedom                                15          15
-    ##   P-value                                        0.000       0.000
-    ##   Scaling correction factor                                  1.301
-    ## 
-    ## User Model versus Baseline Model:
-    ## 
-    ##   Comparative Fit Index (CFI)                    0.992       0.991
-    ##   Tucker-Lewis Index (TLI)                       0.981       0.977
-    ##                                                                   
-    ##   Robust Comparative Fit Index (CFI)                         0.993
-    ##   Robust Tucker-Lewis Index (TLI)                            0.982
-    ## 
-    ## Loglikelihood and Information Criteria:
-    ## 
-    ##   Loglikelihood user model (H0)              -1372.645   -1372.645
-    ##   Scaling correction factor                                  1.269
-    ##       for the MLR correction                                      
-    ##   Loglikelihood unrestricted model (H1)      -1365.424   -1365.424
-    ##   Scaling correction factor                                  1.209
-    ##       for the MLR correction                                      
-    ##                                                                   
-    ##   Akaike (AIC)                                2775.289    2775.289
-    ##   Bayesian (BIC)                              2820.043    2820.043
-    ##   Sample-size adjusted Bayesian (BIC)         2772.577    2772.577
-    ## 
-    ## Root Mean Square Error of Approximation:
-    ## 
-    ##   RMSEA                                          0.098       0.094
-    ##   90 Percent confidence interval - lower         0.032       0.027
-    ##   90 Percent confidence interval - upper         0.164       0.158
-    ##   P-value RMSEA <= 0.05                          0.097       0.114
-    ##                                                                   
-    ##   Robust RMSEA                                               0.096
-    ##   90 Percent confidence interval - lower                     0.025
-    ##   90 Percent confidence interval - upper                     0.165
-    ## 
-    ## Standardized Root Mean Square Residual:
-    ## 
-    ##   SRMR                                           0.014       0.014
-    ## 
-    ## Parameter Estimates:
-    ## 
-    ##   Standard errors                             Sandwich
-    ##   Information bread                           Observed
-    ##   Observed information based on                Hessian
-    ## 
-    ## Latent Variables:
-    ##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
-    ##   age_risk =~                                                           
-    ##     aged_70_older     1.000                               2.285    0.930
-    ##     median_age        1.183    0.069   17.238    0.000    2.702    0.968
-    ##     aged_65_older     1.018    0.011   89.807    0.000    2.326    0.943
-    ##   cases =~                                                              
-    ##     logncpm           1.000                               2.034    1.000
-    ##   deaths =~                                                             
-    ##     logndpm           1.000                               1.725    1.000
-    ##   mitigation =~                                                         
-    ##     strngncy_ndx.x    1.000                               1.791    1.000
-    ## 
-    ## Regressions:
-    ##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
-    ##   cases ~                                                               
-    ##     age_risk          0.488    0.062    7.839    0.000    0.548    0.548
-    ##     mitigation        0.040    0.084    0.475    0.635    0.035    0.035
-    ##   deaths ~                                                              
-    ##     age_risk          0.240    0.057    4.219    0.000    0.317    0.317
-    ##     cases             0.439    0.073    6.051    0.000    0.517    0.517
-    ## 
-    ## Covariances:
-    ##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
-    ##  .aged_70_older ~~                                                      
-    ##    .aged_65_older     0.719    0.323    2.229    0.026    0.719    0.964
-    ##   age_risk ~~                                                           
-    ##     mitigation       -0.318    0.362   -0.877    0.380   -0.078   -0.078
-    ## 
-    ## Variances:
-    ##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
-    ##    .aged_70_older     0.820    0.321    2.550    0.011    0.820    0.136
-    ##    .median_age        0.484    0.343    1.411    0.158    0.484    0.062
-    ##    .aged_65_older     0.678    0.324    2.091    0.037    0.678    0.111
-    ##    .logncpm           0.000                               0.000    0.000
-    ##    .logndpm           0.000                               0.000    0.000
-    ##    .strngncy_ndx.x    0.000                               0.000    0.000
-    ##     age_risk          5.220    0.584    8.939    0.000    1.000    1.000
-    ##    .cases             2.900    0.399    7.266    0.000    0.701    0.701
-    ##    .deaths            1.345    0.143    9.397    0.000    0.452    0.452
-    ##     mitigation        3.208    0.588    5.455    0.000    1.000    1.000
+``` chunk-output
+## lavaan 0.6-6 ended normally after 95 iterations
+## 
+##   Estimator                                         ML
+##   Optimization method                           NLMINB
+##   Number of free parameters                         15
+##                                                       
+##                                                   Used       Total
+##   Number of observations                           146         171
+##                                                                   
+## Model Test User Model:
+##                                                Standard      Robust
+##   Test Statistic                                 14.441      13.660
+##   Degrees of freedom                                  6           6
+##   P-value (Chi-square)                            0.025       0.034
+##   Scaling correction factor                                   1.057
+##        Yuan-Bentler correction (Mplus variant)                     
+## 
+## Model Test Baseline Model:
+## 
+##   Test statistic                              1117.732     859.202
+##   Degrees of freedom                                15          15
+##   P-value                                        0.000       0.000
+##   Scaling correction factor                                  1.301
+## 
+## User Model versus Baseline Model:
+## 
+##   Comparative Fit Index (CFI)                    0.992       0.991
+##   Tucker-Lewis Index (TLI)                       0.981       0.977
+##                                                                   
+##   Robust Comparative Fit Index (CFI)                         0.993
+##   Robust Tucker-Lewis Index (TLI)                            0.982
+## 
+## Loglikelihood and Information Criteria:
+## 
+##   Loglikelihood user model (H0)              -1372.645   -1372.645
+##   Scaling correction factor                                  1.269
+##       for the MLR correction                                      
+##   Loglikelihood unrestricted model (H1)      -1365.424   -1365.424
+##   Scaling correction factor                                  1.209
+##       for the MLR correction                                      
+##                                                                   
+##   Akaike (AIC)                                2775.289    2775.289
+##   Bayesian (BIC)                              2820.043    2820.043
+##   Sample-size adjusted Bayesian (BIC)         2772.577    2772.577
+## 
+## Root Mean Square Error of Approximation:
+## 
+##   RMSEA                                          0.098       0.094
+##   90 Percent confidence interval - lower         0.032       0.027
+##   90 Percent confidence interval - upper         0.164       0.158
+##   P-value RMSEA <= 0.05                          0.097       0.114
+##                                                                   
+##   Robust RMSEA                                               0.096
+##   90 Percent confidence interval - lower                     0.025
+##   90 Percent confidence interval - upper                     0.165
+## 
+## Standardized Root Mean Square Residual:
+## 
+##   SRMR                                           0.014       0.014
+## 
+## Parameter Estimates:
+## 
+##   Standard errors                             Sandwich
+##   Information bread                           Observed
+##   Observed information based on                Hessian
+## 
+## Latent Variables:
+##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+##   age_risk =~                                                           
+##     aged_70_older     1.000                               2.285    0.930
+##     median_age        1.183    0.069   17.238    0.000    2.702    0.968
+##     aged_65_older     1.018    0.011   89.807    0.000    2.326    0.943
+##   cases =~                                                              
+##     logncpm           1.000                               2.034    1.000
+##   deaths =~                                                             
+##     logndpm           1.000                               1.725    1.000
+##   mitigation =~                                                         
+##     strngncy_ndx.x    1.000                               1.791    1.000
+## 
+## Regressions:
+##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+##   cases ~                                                               
+##     age_risk          0.488    0.062    7.839    0.000    0.548    0.548
+##     mitigation        0.040    0.084    0.475    0.635    0.035    0.035
+##   deaths ~                                                              
+##     age_risk          0.240    0.057    4.219    0.000    0.317    0.317
+##     cases             0.439    0.073    6.051    0.000    0.517    0.517
+## 
+## Covariances:
+##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+##  .aged_70_older ~~                                                      
+##    .aged_65_older     0.719    0.323    2.229    0.026    0.719    0.964
+##   age_risk ~~                                                           
+##     mitigation       -0.318    0.362   -0.877    0.380   -0.078   -0.078
+## 
+## Variances:
+##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+##    .aged_70_older     0.820    0.321    2.550    0.011    0.820    0.136
+##    .median_age        0.484    0.343    1.411    0.158    0.484    0.062
+##    .aged_65_older     0.678    0.324    2.091    0.037    0.678    0.111
+##    .logncpm           0.000                               0.000    0.000
+##    .logndpm           0.000                               0.000    0.000
+##    .strngncy_ndx.x    0.000                               0.000    0.000
+##     age_risk          5.220    0.584    8.939    0.000    1.000    1.000
+##    .cases             2.900    0.399    7.266    0.000    0.701    0.701
+##    .deaths            1.345    0.143    9.397    0.000    0.452    0.452
+##     mitigation        3.208    0.588    5.455    0.000    1.000    1.000
+```
 
 All fit measures are improved over the initial simplified model, though
 chi-squared is still within the significant range. This model is a
@@ -1020,10 +1029,9 @@ objectively good fit.
 semPaths(cfa4_sem,  what = "stand", rotation = 2, layout = "tree")
 ```
 
-<img src="Figs/cfa4_vis-1.png" style="display: block; margin: auto;" />
-Quite similar to previous models, however there is some negative
-covariance indicated between mitigations and age related risk that was
-not included in the SEM.
+![](Figs/cfa4_vis-1.png) Quite similar to previous models, however there
+is some negative covariance indicated between mitigations and age
+related risk that was not included in the SEM.
 
 **Static Statistics** Attempts were made to substitute in additional
 static statistics such as government effectiveness and healthcare
@@ -1095,141 +1103,143 @@ cfa_tv_sem <- sem(cfa_tv_model, data = cfa_tv, estimator = "MLR")
 summary(cfa_tv_sem, fit.measures=TRUE, standardized=TRUE)
 ```
 
-    ## lavaan 0.6-6 ended normally after 88 iterations
-    ## 
-    ##   Estimator                                         ML
-    ##   Optimization method                           NLMINB
-    ##   Number of free parameters                         29
-    ##                                                       
-    ##                                                   Used       Total
-    ##   Number of observations                           124         158
-    ##                                                                   
-    ## Model Test User Model:
-    ##                                                Standard      Robust
-    ##   Test Statistic                                 33.106      28.620
-    ##   Degrees of freedom                                 16          16
-    ##   P-value (Chi-square)                            0.007       0.027
-    ##   Scaling correction factor                                   1.157
-    ##        Yuan-Bentler correction (Mplus variant)                     
-    ## 
-    ## Model Test Baseline Model:
-    ## 
-    ##   Test statistic                              1333.723     978.237
-    ##   Degrees of freedom                                36          36
-    ##   P-value                                        0.000       0.000
-    ##   Scaling correction factor                                  1.363
-    ## 
-    ## User Model versus Baseline Model:
-    ## 
-    ##   Comparative Fit Index (CFI)                    0.987       0.987
-    ##   Tucker-Lewis Index (TLI)                       0.970       0.970
-    ##                                                                   
-    ##   Robust Comparative Fit Index (CFI)                         0.989
-    ##   Robust Tucker-Lewis Index (TLI)                            0.974
-    ## 
-    ## Loglikelihood and Information Criteria:
-    ## 
-    ##   Loglikelihood user model (H0)              -1769.517   -1769.517
-    ##   Scaling correction factor                                  1.386
-    ##       for the MLR correction                                      
-    ##   Loglikelihood unrestricted model (H1)      -1752.963   -1752.963
-    ##   Scaling correction factor                                  1.305
-    ##       for the MLR correction                                      
-    ##                                                                   
-    ##   Akaike (AIC)                                3597.033    3597.033
-    ##   Bayesian (BIC)                              3678.821    3678.821
-    ##   Sample-size adjusted Bayesian (BIC)         3587.122    3587.122
-    ## 
-    ## Root Mean Square Error of Approximation:
-    ## 
-    ##   RMSEA                                          0.093       0.080
-    ##   90 Percent confidence interval - lower         0.047       0.032
-    ##   90 Percent confidence interval - upper         0.138       0.123
-    ##   P-value RMSEA <= 0.05                          0.060       0.129
-    ##                                                                   
-    ##   Robust RMSEA                                               0.086
-    ##   90 Percent confidence interval - lower                     0.029
-    ##   90 Percent confidence interval - upper                     0.136
-    ## 
-    ## Standardized Root Mean Square Residual:
-    ## 
-    ##   SRMR                                           0.065       0.065
-    ## 
-    ## Parameter Estimates:
-    ## 
-    ##   Standard errors                             Sandwich
-    ##   Information bread                           Observed
-    ##   Observed information based on                Hessian
-    ## 
-    ## Latent Variables:
-    ##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
-    ##   age_risk =~                                                           
-    ##     aged_70_oldr.x    1.000                               2.319    0.928
-    ##     median_age.x      1.117    0.064   17.508    0.000    2.590    0.964
-    ##     aged_65_oldr.x    1.013    0.012   86.402    0.000    2.349    0.942
-    ##   cases0 =~                                                             
-    ##     logncpm.x         1.000                               2.102    1.000
-    ##   cases1 =~                                                             
-    ##     logncpm.y         1.000                               1.989    1.000
-    ##   deaths0 =~                                                            
-    ##     logndpm.x         1.000                               1.766    1.000
-    ##   deaths1 =~                                                            
-    ##     logndpm.y         1.000                               2.237    1.000
-    ##   mitigation0 =~                                                        
-    ##     strngncy_ndx..    1.000                               1.778    1.000
-    ##   mitigation1 =~                                                        
-    ##     strngncy_ndx..    1.000                               1.748    1.000
-    ## 
-    ## Regressions:
-    ##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
-    ##   deaths1 ~                                                             
-    ##     age_risk          0.376    0.104    3.603    0.000    0.390    0.390
-    ##     cases1            0.595    0.109    5.462    0.000    0.529    0.529
-    ##     cases0            0.038    0.152    0.249    0.803    0.036    0.036
-    ##   mitigation1 ~                                                         
-    ##     cases0           -0.010    0.076   -0.126    0.900   -0.012   -0.012
-    ##     cases1            0.172    0.107    1.614    0.107    0.196    0.196
-    ##     mitigation0       0.731    0.091    8.052    0.000    0.743    0.743
-    ##   cases1 ~                                                              
-    ##     age_risk         -0.253    0.069   -3.684    0.000   -0.295   -0.295
-    ##     mitigation0      -0.063    0.080   -0.789    0.430   -0.056   -0.056
-    ##     cases0            0.857    0.079   10.911    0.000    0.906    0.906
-    ##   deaths0 ~                                                             
-    ##     age_risk          0.268    0.063    4.242    0.000    0.351    0.351
-    ##     cases0            0.418    0.078    5.340    0.000    0.497    0.497
-    ##   mitigation0 ~                                                         
-    ##     cases0           -0.061    0.083   -0.736    0.462   -0.072   -0.072
-    ##   cases0 ~                                                              
-    ##     age_risk          0.524    0.066    7.926    0.000    0.578    0.578
-    ## 
-    ## Covariances:
-    ##                      Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
-    ##  .aged_70_older.x ~~                                                      
-    ##    .aged_65_oldr.x      0.753    0.317    2.377    0.017    0.753    0.962
-    ##  .deaths0 ~~                                                              
-    ##    .deaths1             0.951    0.188    5.065    0.000    0.563    0.563
-    ##    .mitigation1        -0.103    0.116   -0.891    0.373   -0.077   -0.077
-    ##  .deaths1 ~~                                                              
-    ##    .mitigation1        -0.276    0.197   -1.401    0.161   -0.162   -0.162
-    ## 
-    ## Variances:
-    ##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
-    ##    .aged_70_oldr.x    0.866    0.322    2.693    0.007    0.866    0.139
-    ##    .median_age.x      0.509    0.313    1.623    0.104    0.509    0.071
-    ##    .aged_65_oldr.x    0.706    0.313    2.258    0.024    0.706    0.114
-    ##    .logncpm.x         0.000                               0.000    0.000
-    ##    .logncpm.y         0.000                               0.000    0.000
-    ##    .logndpm.x         0.000                               0.000    0.000
-    ##    .logndpm.y         0.000                               0.000    0.000
-    ##    .strngncy_ndx..    0.000                               0.000    0.000
-    ##    .strngncy_ndx..    0.000                               0.000    0.000
-    ##     age_risk          5.375    0.527   10.195    0.000    1.000    1.000
-    ##    .cases0            2.940    0.446    6.588    0.000    0.665    0.665
-    ##    .cases1            1.553    0.222    7.001    0.000    0.393    0.393
-    ##    .deaths0           1.333    0.165    8.095    0.000    0.427    0.427
-    ##    .deaths1           2.140    0.295    7.243    0.000    0.428    0.428
-    ##    .mitigation0       3.144    0.624    5.041    0.000    0.995    0.995
-    ##    .mitigation1       1.354    0.320    4.232    0.000    0.443    0.443
+``` chunk-output
+## lavaan 0.6-6 ended normally after 88 iterations
+## 
+##   Estimator                                         ML
+##   Optimization method                           NLMINB
+##   Number of free parameters                         29
+##                                                       
+##                                                   Used       Total
+##   Number of observations                           124         158
+##                                                                   
+## Model Test User Model:
+##                                                Standard      Robust
+##   Test Statistic                                 33.106      28.620
+##   Degrees of freedom                                 16          16
+##   P-value (Chi-square)                            0.007       0.027
+##   Scaling correction factor                                   1.157
+##        Yuan-Bentler correction (Mplus variant)                     
+## 
+## Model Test Baseline Model:
+## 
+##   Test statistic                              1333.723     978.237
+##   Degrees of freedom                                36          36
+##   P-value                                        0.000       0.000
+##   Scaling correction factor                                  1.363
+## 
+## User Model versus Baseline Model:
+## 
+##   Comparative Fit Index (CFI)                    0.987       0.987
+##   Tucker-Lewis Index (TLI)                       0.970       0.970
+##                                                                   
+##   Robust Comparative Fit Index (CFI)                         0.989
+##   Robust Tucker-Lewis Index (TLI)                            0.974
+## 
+## Loglikelihood and Information Criteria:
+## 
+##   Loglikelihood user model (H0)              -1769.517   -1769.517
+##   Scaling correction factor                                  1.386
+##       for the MLR correction                                      
+##   Loglikelihood unrestricted model (H1)      -1752.963   -1752.963
+##   Scaling correction factor                                  1.305
+##       for the MLR correction                                      
+##                                                                   
+##   Akaike (AIC)                                3597.033    3597.033
+##   Bayesian (BIC)                              3678.821    3678.821
+##   Sample-size adjusted Bayesian (BIC)         3587.122    3587.122
+## 
+## Root Mean Square Error of Approximation:
+## 
+##   RMSEA                                          0.093       0.080
+##   90 Percent confidence interval - lower         0.047       0.032
+##   90 Percent confidence interval - upper         0.138       0.123
+##   P-value RMSEA <= 0.05                          0.060       0.129
+##                                                                   
+##   Robust RMSEA                                               0.086
+##   90 Percent confidence interval - lower                     0.029
+##   90 Percent confidence interval - upper                     0.136
+## 
+## Standardized Root Mean Square Residual:
+## 
+##   SRMR                                           0.065       0.065
+## 
+## Parameter Estimates:
+## 
+##   Standard errors                             Sandwich
+##   Information bread                           Observed
+##   Observed information based on                Hessian
+## 
+## Latent Variables:
+##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+##   age_risk =~                                                           
+##     aged_70_oldr.x    1.000                               2.319    0.928
+##     median_age.x      1.117    0.064   17.508    0.000    2.590    0.964
+##     aged_65_oldr.x    1.013    0.012   86.402    0.000    2.349    0.942
+##   cases0 =~                                                             
+##     logncpm.x         1.000                               2.102    1.000
+##   cases1 =~                                                             
+##     logncpm.y         1.000                               1.989    1.000
+##   deaths0 =~                                                            
+##     logndpm.x         1.000                               1.766    1.000
+##   deaths1 =~                                                            
+##     logndpm.y         1.000                               2.237    1.000
+##   mitigation0 =~                                                        
+##     strngncy_ndx..    1.000                               1.778    1.000
+##   mitigation1 =~                                                        
+##     strngncy_ndx..    1.000                               1.748    1.000
+## 
+## Regressions:
+##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+##   deaths1 ~                                                             
+##     age_risk          0.376    0.104    3.603    0.000    0.390    0.390
+##     cases1            0.595    0.109    5.462    0.000    0.529    0.529
+##     cases0            0.038    0.152    0.249    0.803    0.036    0.036
+##   mitigation1 ~                                                         
+##     cases0           -0.010    0.076   -0.126    0.900   -0.012   -0.012
+##     cases1            0.172    0.107    1.614    0.107    0.196    0.196
+##     mitigation0       0.731    0.091    8.052    0.000    0.743    0.743
+##   cases1 ~                                                              
+##     age_risk         -0.253    0.069   -3.684    0.000   -0.295   -0.295
+##     mitigation0      -0.063    0.080   -0.789    0.430   -0.056   -0.056
+##     cases0            0.857    0.079   10.911    0.000    0.906    0.906
+##   deaths0 ~                                                             
+##     age_risk          0.268    0.063    4.242    0.000    0.351    0.351
+##     cases0            0.418    0.078    5.340    0.000    0.497    0.497
+##   mitigation0 ~                                                         
+##     cases0           -0.061    0.083   -0.736    0.462   -0.072   -0.072
+##   cases0 ~                                                              
+##     age_risk          0.524    0.066    7.926    0.000    0.578    0.578
+## 
+## Covariances:
+##                      Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+##  .aged_70_older.x ~~                                                      
+##    .aged_65_oldr.x      0.753    0.317    2.377    0.017    0.753    0.962
+##  .deaths0 ~~                                                              
+##    .deaths1             0.951    0.188    5.065    0.000    0.563    0.563
+##    .mitigation1        -0.103    0.116   -0.891    0.373   -0.077   -0.077
+##  .deaths1 ~~                                                              
+##    .mitigation1        -0.276    0.197   -1.401    0.161   -0.162   -0.162
+## 
+## Variances:
+##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+##    .aged_70_oldr.x    0.866    0.322    2.693    0.007    0.866    0.139
+##    .median_age.x      0.509    0.313    1.623    0.104    0.509    0.071
+##    .aged_65_oldr.x    0.706    0.313    2.258    0.024    0.706    0.114
+##    .logncpm.x         0.000                               0.000    0.000
+##    .logncpm.y         0.000                               0.000    0.000
+##    .logndpm.x         0.000                               0.000    0.000
+##    .logndpm.y         0.000                               0.000    0.000
+##    .strngncy_ndx..    0.000                               0.000    0.000
+##    .strngncy_ndx..    0.000                               0.000    0.000
+##     age_risk          5.375    0.527   10.195    0.000    1.000    1.000
+##    .cases0            2.940    0.446    6.588    0.000    0.665    0.665
+##    .cases1            1.553    0.222    7.001    0.000    0.393    0.393
+##    .deaths0           1.333    0.165    8.095    0.000    0.427    0.427
+##    .deaths1           2.140    0.295    7.243    0.000    0.428    0.428
+##    .mitigation0       3.144    0.624    5.041    0.000    0.995    0.995
+##    .mitigation1       1.354    0.320    4.232    0.000    0.443    0.443
+```
 
 Somewhat surprisingly, there were no errors in processing the model.
 Unfortunately, model fit indicators are performing poorer, CSS is
@@ -1241,10 +1251,10 @@ A worthwhile test, but unfortunately not fully successful.
 semPaths(cfa_tv_sem,  what = "stand", rotation = 2, layout = "tree")
 ```
 
-<img src="Figs/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
-As there were errors in processing the model it may be interesting if we
-assume there was no inititial mitigation, as there would have been at
-the start of the pandemic and modify the structure as such.
+![](Figs/unnamed-chunk-8-1.png) As there were errors in processing the
+model it may be interesting if we assume there was no inititial
+mitigation, as there would have been at the start of the pandemic and
+modify the structure as such.
 
 ![DAG](./dags/tvdag2.png)
 
@@ -1274,133 +1284,135 @@ cfa_tv_sem <- sem(cfa_tv_model, data = cfa_tv, estimator = "MLR")
 summary(cfa_tv_sem, fit.measures=TRUE, standardized=TRUE)
 ```
 
-    ## lavaan 0.6-6 ended normally after 90 iterations
-    ## 
-    ##   Estimator                                         ML
-    ##   Optimization method                           NLMINB
-    ##   Number of free parameters                         25
-    ##                                                       
-    ##                                                   Used       Total
-    ##   Number of observations                           124         158
-    ##                                                                   
-    ## Model Test User Model:
-    ##                                                Standard      Robust
-    ##   Test Statistic                                 20.495      17.991
-    ##   Degrees of freedom                                 11          11
-    ##   P-value (Chi-square)                            0.039       0.082
-    ##   Scaling correction factor                                   1.139
-    ##        Yuan-Bentler correction (Mplus variant)                     
-    ## 
-    ## Model Test Baseline Model:
-    ## 
-    ##   Test statistic                              1218.338     919.909
-    ##   Degrees of freedom                                28          28
-    ##   P-value                                        0.000       0.000
-    ##   Scaling correction factor                                  1.324
-    ## 
-    ## User Model versus Baseline Model:
-    ## 
-    ##   Comparative Fit Index (CFI)                    0.992       0.992
-    ##   Tucker-Lewis Index (TLI)                       0.980       0.980
-    ##                                                                   
-    ##   Robust Comparative Fit Index (CFI)                         0.993
-    ##   Robust Tucker-Lewis Index (TLI)                            0.983
-    ## 
-    ## Loglikelihood and Information Criteria:
-    ## 
-    ##   Loglikelihood user model (H0)              -1573.616   -1573.616
-    ##   Scaling correction factor                                  1.267
-    ##       for the MLR correction                                      
-    ##   Loglikelihood unrestricted model (H1)      -1563.369   -1563.369
-    ##   Scaling correction factor                                  1.228
-    ##       for the MLR correction                                      
-    ##                                                                   
-    ##   Akaike (AIC)                                3197.232    3197.232
-    ##   Bayesian (BIC)                              3267.739    3267.739
-    ##   Sample-size adjusted Bayesian (BIC)         3188.688    3188.688
-    ## 
-    ## Root Mean Square Error of Approximation:
-    ## 
-    ##   RMSEA                                          0.083       0.072
-    ##   90 Percent confidence interval - lower         0.018       0.000
-    ##   90 Percent confidence interval - upper         0.139       0.126
-    ##   P-value RMSEA <= 0.05                          0.150       0.237
-    ##                                                                   
-    ##   Robust RMSEA                                               0.076
-    ##   90 Percent confidence interval - lower                     0.000
-    ##   90 Percent confidence interval - upper                     0.138
-    ## 
-    ## Standardized Root Mean Square Residual:
-    ## 
-    ##   SRMR                                           0.036       0.036
-    ## 
-    ## Parameter Estimates:
-    ## 
-    ##   Standard errors                             Sandwich
-    ##   Information bread                           Observed
-    ##   Observed information based on                Hessian
-    ## 
-    ## Latent Variables:
-    ##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
-    ##   age_risk =~                                                           
-    ##     aged_70_oldr.x    1.000                               2.321    0.929
-    ##     median_age.x      1.115    0.066   16.983    0.000    2.587    0.963
-    ##     aged_65_oldr.x    1.013    0.012   86.612    0.000    2.351    0.942
-    ##   cases0 =~                                                             
-    ##     logncpm.x         1.000                               2.102    1.000
-    ##   cases1 =~                                                             
-    ##     logncpm.y         1.000                               1.982    1.000
-    ##   deaths0 =~                                                            
-    ##     logndpm.x         1.000                               1.763    1.000
-    ##   deaths1 =~                                                            
-    ##     logndpm.y         1.000                               2.230    1.000
-    ##   mitigation1 =~                                                        
-    ##     strngncy_ndx..    1.000                               1.752    1.000
-    ## 
-    ## Regressions:
-    ##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
-    ##   deaths1 ~                                                             
-    ##     age_risk          0.354    0.107    3.320    0.001    0.369    0.369
-    ##     cases1            0.586    0.110    5.314    0.000    0.521    0.521
-    ##     cases0            0.058    0.153    0.376    0.707    0.054    0.054
-    ##   mitigation1 ~                                                         
-    ##     cases0           -0.061    0.105   -0.583    0.560   -0.074   -0.074
-    ##     cases1            0.182    0.115    1.582    0.114    0.206    0.206
-    ##   cases1 ~                                                              
-    ##     age_risk         -0.237    0.074   -3.214    0.001   -0.277   -0.277
-    ##     cases0            0.850    0.080   10.684    0.000    0.902    0.902
-    ##   deaths0 ~                                                             
-    ##     age_risk          0.261    0.063    4.112    0.000    0.344    0.344
-    ##     cases0            0.422    0.079    5.369    0.000    0.503    0.503
-    ##   cases0 ~                                                              
-    ##     age_risk          0.524    0.066    7.911    0.000    0.578    0.578
-    ## 
-    ## Covariances:
-    ##                      Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
-    ##  .aged_70_older.x ~~                                                      
-    ##    .aged_65_oldr.x      0.742    0.334    2.219    0.027    0.742    0.962
-    ##  .deaths0 ~~                                                              
-    ##    .deaths1             0.951    0.187    5.072    0.000    0.563    0.563
-    ##    .mitigation1        -0.025    0.166   -0.150    0.880   -0.012   -0.012
-    ##  .deaths1 ~~                                                              
-    ##    .mitigation1        -0.117    0.254   -0.461    0.645   -0.046   -0.046
-    ## 
-    ## Variances:
-    ##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
-    ##    .aged_70_oldr.x    0.855    0.339    2.523    0.012    0.855    0.137
-    ##    .median_age.x      0.520    0.329    1.580    0.114    0.520    0.072
-    ##    .aged_65_oldr.x    0.696    0.331    2.104    0.035    0.696    0.112
-    ##    .logncpm.x         0.000                               0.000    0.000
-    ##    .logncpm.y         0.000                               0.000    0.000
-    ##    .logndpm.x         0.000                               0.000    0.000
-    ##    .logndpm.y         0.000                               0.000    0.000
-    ##    .strngncy_ndx..    0.000                               0.000    0.000
-    ##     age_risk          5.386    0.528   10.201    0.000    1.000    1.000
-    ##    .cases0            2.941    0.446    6.594    0.000    0.666    0.666
-    ##    .cases1            1.567    0.224    6.991    0.000    0.399    0.399
-    ##    .deaths0           1.332    0.165    8.091    0.000    0.429    0.429
-    ##    .deaths1           2.140    0.295    7.248    0.000    0.430    0.430
-    ##    .mitigation1       2.992    0.605    4.943    0.000    0.975    0.975
+``` chunk-output
+## lavaan 0.6-6 ended normally after 90 iterations
+## 
+##   Estimator                                         ML
+##   Optimization method                           NLMINB
+##   Number of free parameters                         25
+##                                                       
+##                                                   Used       Total
+##   Number of observations                           124         158
+##                                                                   
+## Model Test User Model:
+##                                                Standard      Robust
+##   Test Statistic                                 20.495      17.991
+##   Degrees of freedom                                 11          11
+##   P-value (Chi-square)                            0.039       0.082
+##   Scaling correction factor                                   1.139
+##        Yuan-Bentler correction (Mplus variant)                     
+## 
+## Model Test Baseline Model:
+## 
+##   Test statistic                              1218.338     919.909
+##   Degrees of freedom                                28          28
+##   P-value                                        0.000       0.000
+##   Scaling correction factor                                  1.324
+## 
+## User Model versus Baseline Model:
+## 
+##   Comparative Fit Index (CFI)                    0.992       0.992
+##   Tucker-Lewis Index (TLI)                       0.980       0.980
+##                                                                   
+##   Robust Comparative Fit Index (CFI)                         0.993
+##   Robust Tucker-Lewis Index (TLI)                            0.983
+## 
+## Loglikelihood and Information Criteria:
+## 
+##   Loglikelihood user model (H0)              -1573.616   -1573.616
+##   Scaling correction factor                                  1.267
+##       for the MLR correction                                      
+##   Loglikelihood unrestricted model (H1)      -1563.369   -1563.369
+##   Scaling correction factor                                  1.228
+##       for the MLR correction                                      
+##                                                                   
+##   Akaike (AIC)                                3197.232    3197.232
+##   Bayesian (BIC)                              3267.739    3267.739
+##   Sample-size adjusted Bayesian (BIC)         3188.688    3188.688
+## 
+## Root Mean Square Error of Approximation:
+## 
+##   RMSEA                                          0.083       0.072
+##   90 Percent confidence interval - lower         0.018       0.000
+##   90 Percent confidence interval - upper         0.139       0.126
+##   P-value RMSEA <= 0.05                          0.150       0.237
+##                                                                   
+##   Robust RMSEA                                               0.076
+##   90 Percent confidence interval - lower                     0.000
+##   90 Percent confidence interval - upper                     0.138
+## 
+## Standardized Root Mean Square Residual:
+## 
+##   SRMR                                           0.036       0.036
+## 
+## Parameter Estimates:
+## 
+##   Standard errors                             Sandwich
+##   Information bread                           Observed
+##   Observed information based on                Hessian
+## 
+## Latent Variables:
+##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+##   age_risk =~                                                           
+##     aged_70_oldr.x    1.000                               2.321    0.929
+##     median_age.x      1.115    0.066   16.983    0.000    2.587    0.963
+##     aged_65_oldr.x    1.013    0.012   86.612    0.000    2.351    0.942
+##   cases0 =~                                                             
+##     logncpm.x         1.000                               2.102    1.000
+##   cases1 =~                                                             
+##     logncpm.y         1.000                               1.982    1.000
+##   deaths0 =~                                                            
+##     logndpm.x         1.000                               1.763    1.000
+##   deaths1 =~                                                            
+##     logndpm.y         1.000                               2.230    1.000
+##   mitigation1 =~                                                        
+##     strngncy_ndx..    1.000                               1.752    1.000
+## 
+## Regressions:
+##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+##   deaths1 ~                                                             
+##     age_risk          0.354    0.107    3.320    0.001    0.369    0.369
+##     cases1            0.586    0.110    5.314    0.000    0.521    0.521
+##     cases0            0.058    0.153    0.376    0.707    0.054    0.054
+##   mitigation1 ~                                                         
+##     cases0           -0.061    0.105   -0.583    0.560   -0.074   -0.074
+##     cases1            0.182    0.115    1.582    0.114    0.206    0.206
+##   cases1 ~                                                              
+##     age_risk         -0.237    0.074   -3.214    0.001   -0.277   -0.277
+##     cases0            0.850    0.080   10.684    0.000    0.902    0.902
+##   deaths0 ~                                                             
+##     age_risk          0.261    0.063    4.112    0.000    0.344    0.344
+##     cases0            0.422    0.079    5.369    0.000    0.503    0.503
+##   cases0 ~                                                              
+##     age_risk          0.524    0.066    7.911    0.000    0.578    0.578
+## 
+## Covariances:
+##                      Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+##  .aged_70_older.x ~~                                                      
+##    .aged_65_oldr.x      0.742    0.334    2.219    0.027    0.742    0.962
+##  .deaths0 ~~                                                              
+##    .deaths1             0.951    0.187    5.072    0.000    0.563    0.563
+##    .mitigation1        -0.025    0.166   -0.150    0.880   -0.012   -0.012
+##  .deaths1 ~~                                                              
+##    .mitigation1        -0.117    0.254   -0.461    0.645   -0.046   -0.046
+## 
+## Variances:
+##                    Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+##    .aged_70_oldr.x    0.855    0.339    2.523    0.012    0.855    0.137
+##    .median_age.x      0.520    0.329    1.580    0.114    0.520    0.072
+##    .aged_65_oldr.x    0.696    0.331    2.104    0.035    0.696    0.112
+##    .logncpm.x         0.000                               0.000    0.000
+##    .logncpm.y         0.000                               0.000    0.000
+##    .logndpm.x         0.000                               0.000    0.000
+##    .logndpm.y         0.000                               0.000    0.000
+##    .strngncy_ndx..    0.000                               0.000    0.000
+##     age_risk          5.386    0.528   10.201    0.000    1.000    1.000
+##    .cases0            2.941    0.446    6.594    0.000    0.666    0.666
+##    .cases1            1.567    0.224    6.991    0.000    0.399    0.399
+##    .deaths0           1.332    0.165    8.091    0.000    0.429    0.429
+##    .deaths1           2.140    0.295    7.248    0.000    0.430    0.430
+##    .mitigation1       2.992    0.605    4.943    0.000    0.975    0.975
+```
 
 The above model indicates good fit across all fit indices! Chi-squared
 has moved above the significant threshold, though still low, SRMR
@@ -1414,8 +1426,10 @@ cases 0 is unlikely to be represented of the true causal path.
 reliability(cfa_tv_sem)
 ```
 
-    ##     alpha     omega    omega2    omega3    avevar 
-    ## 0.9748320 0.9367829 0.9367829 0.9374871 0.8947247
+``` chunk-output
+##     alpha     omega    omega2    omega3    avevar 
+## 0.9748320 0.9367829 0.9367829 0.9374871 0.8947247
+```
 
 All reliability scores are above the threshold.
 
@@ -1423,28 +1437,30 @@ All reliability scores are above the threshold.
 resid(cfa_tv_sem, "cor")
 ```
 
-    ## $type
-    ## [1] "cor.bollen"
-    ## 
-    ## $cov
-    ##                      a_70_. mdn_g. a_65_. lgncpm.x lgncpm.y lgndpm.x lgndpm.y
-    ## aged_70_older.x       0.000                                                  
-    ## median_age.x         -0.002  0.000                                           
-    ## aged_65_older.x       0.000 -0.001  0.000                                    
-    ## logncpm.x             0.008  0.018 -0.011  0.000                             
-    ## logncpm.y             0.006  0.021 -0.013  0.000    0.000                    
-    ## logndpm.x             0.021 -0.001  0.011  0.000   -0.023    0.000           
-    ## logndpm.y             0.034  0.002  0.021  0.004   -0.009   -0.007    0.000  
-    ## stringency_index.x.y -0.129 -0.054 -0.140  0.000    0.000   -0.035   -0.035  
-    ##                      str_..
-    ## aged_70_older.x            
-    ## median_age.x               
-    ## aged_65_older.x            
-    ## logncpm.x                  
-    ## logncpm.y                  
-    ## logndpm.x                  
-    ## logndpm.y                  
-    ## stringency_index.x.y  0.000
+``` chunk-output
+## $type
+## [1] "cor.bollen"
+## 
+## $cov
+##                      a_70_. mdn_g. a_65_. lgncpm.x lgncpm.y lgndpm.x lgndpm.y
+## aged_70_older.x       0.000                                                  
+## median_age.x         -0.002  0.000                                           
+## aged_65_older.x       0.000 -0.001  0.000                                    
+## logncpm.x             0.008  0.018 -0.011  0.000                             
+## logncpm.y             0.006  0.021 -0.013  0.000    0.000                    
+## logndpm.x             0.021 -0.001  0.011  0.000   -0.023    0.000           
+## logndpm.y             0.034  0.002  0.021  0.004   -0.009   -0.007    0.000  
+## stringency_index.x.y -0.129 -0.054 -0.140  0.000    0.000   -0.035   -0.035  
+##                      str_..
+## aged_70_older.x            
+## median_age.x               
+## aged_65_older.x            
+## logncpm.x                  
+## logncpm.y                  
+## logndpm.x                  
+## logndpm.y                  
+## stringency_index.x.y  0.000
+```
 
 There appears to be no highly significant difference between observed
 and implied correlations, stringency sitting just above threshold
